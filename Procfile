@@ -1,0 +1,1 @@
+web: gunicorn kmzi_service:app
