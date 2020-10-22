@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 
+from Modules.math_module import is_prime_for_short
+
 app = Flask(__name__)
 
 
@@ -14,7 +16,20 @@ def sum_big_int():
         result = str(num1 + num2)
     except Exception as e:
         error = e.__str__()
-    return jsonify(sum=result, error=error)
+    return jsonify(result=result, error=error)
+
+
+@app.route('/check_is_prime/', methods=['POST'])
+def check_is_prime():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        num1 = int(json_data["num"])
+        result = str(is_prime_for_short(num1))
+    except Exception as e:
+        error = e.__str__()
+    return jsonify(result=result, error=error)
 
 
 if __name__ == '__main__':
