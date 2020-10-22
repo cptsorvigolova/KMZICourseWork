@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from Modules.math_module import is_prime_for_short
+from Modules.math_module import is_prime
 
 app = Flask(__name__)
 
@@ -25,8 +25,8 @@ def check_is_prime():
     result = ''
     try:
         json_data = request.get_json()
-        num1 = int(json_data["num"])
-        result = str(is_prime_for_short(num1))
+        num = int(json_data["num"])
+        result = str(is_prime(num))
     except Exception as e:
         error = e.__str__()
     return jsonify(result=result, error=error)
