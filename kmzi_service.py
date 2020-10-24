@@ -4,7 +4,7 @@ from Modules.math_module import is_prime, factorize_int
 from Modules.rsa_module import get_open_exp_candidates
 
 app = Flask(__name__)
-cors = CORS(app)
+CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
@@ -20,7 +20,9 @@ def sum_big_int():
         result = str(num1 + num2)
     except Exception as e:
         error = e.__str__()
-    return jsonify(result=result, error=error)
+    response = jsonify(result=result, error=error)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 @app.route('/check_is_prime/', methods=['POST'])
@@ -34,7 +36,9 @@ def check_is_prime():
         result = str(is_prime(num))
     except Exception as e:
         error = e.__str__()
-    return jsonify(result=result, error=error)
+    response = jsonify(result=result, error=error)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 @app.route('/factorize/', methods=['POST'])
@@ -48,7 +52,9 @@ def factorize():
         result = factorize_int(num)
     except Exception as e:
         error = e.__str__()
-    return jsonify(result=result, error=error)
+    response = jsonify(result=result, error=error)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 @app.route('/generate_open_exp/', methods=['POST'])
@@ -70,7 +76,9 @@ def generate_open_exp():
         candidates = get_open_exp_candidates(r)
     except Exception as e:
         error = e.__str__()
-    return jsonify(n=str(n), r=str(r), candidates=candidates, error=error)
+    response = jsonify(n=str(n), r=str(r), candidates=candidates, error=error)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 if __name__ == '__main__':
