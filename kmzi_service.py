@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from Modules.math_module import is_prime, factorize_int
 from Modules.rsa_module import get_open_exp_candidates
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route('/sum_big_int/', methods=['POST'])
+@cross_origin()
 def sum_big_int():
     error = ''
     result = ''
@@ -20,6 +24,7 @@ def sum_big_int():
 
 
 @app.route('/check_is_prime/', methods=['POST'])
+@cross_origin()
 def check_is_prime():
     error = ''
     result = ''
@@ -32,7 +37,22 @@ def check_is_prime():
     return jsonify(result=result, error=error)
 
 
+@app.route('/factorize/', methods=['POST'])
+@cross_origin()
+def factorize():
+    error = ''
+    result = []
+    try:
+        json_data = request.get_json()
+        num = int(json_data["num"])
+        result = factorize_int(num)
+    except Exception as e:
+        error = e.__str__()
+    return jsonify(result=result, error=error)
+
+
 @app.route('/generate_open_exp/', methods=['POST'])
+@cross_origin()
 def generate_open_exp():
     p, q, n, r = 0, 0, 0, 0
     error = ''
@@ -51,19 +71,6 @@ def generate_open_exp():
     except Exception as e:
         error = e.__str__()
     return jsonify(n=str(n), r=str(r), candidates=candidates, error=error)
-
-
-@app.route('/factorize/', methods=['POST'])
-def factorize():
-    error = ''
-    result = []
-    try:
-        json_data = request.get_json()
-        num = int(json_data["num"])
-        result = factorize_int(num)
-    except Exception as e:
-        error = e.__str__()
-    return jsonify(result=result, error=error)
 
 
 if __name__ == '__main__':
