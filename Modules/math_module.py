@@ -12,4 +12,4 @@ def factorize_int(num):
 
 
 def is_coprime(num1, num2):
-    return gcd(num1, num2)
+    return gcd(num1, num2) == 1
