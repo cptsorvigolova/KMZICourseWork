@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from Modules.math_module import is_prime, factorize_int, is_coprime
-from Modules.rsa_module import get_open_exp_candidates
+from Modules.rsa_module import get_open_exp_candidates, encrypt
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -103,6 +103,25 @@ def calculate_edr():
                        edmodr=str(edmodr),
                        er_iscoprime=str(er_iscoprime),
                        ed_iscoprime=str(ed_iscoprime),
+                       error=error)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/encrypt_session_key/', methods=['POST'])
+@cross_origin()
+def encrypt_session_key():
+    error = ''
+    encrypted_session_key = ''
+    try:
+        json_data = request.get_json()
+        e = int(json_data["e"])
+        n = int(json_data["n"])
+        session_key = int(json_data["session_key"])
+        encrypted_session_key = encrypt(e, n, session_key)
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(encrypted_session_key=str(encrypted_session_key),
                        error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
