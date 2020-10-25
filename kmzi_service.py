@@ -8,7 +8,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/sum_big_int/', methods=['POST'])
-#@cross_origin()
+@cross_origin()
 def sum_big_int():
     error = ''
     result = ''
@@ -25,7 +25,7 @@ def sum_big_int():
 
 
 @app.route('/check_is_prime/', methods=['POST'])
-#@cross_origin()
+@cross_origin()
 def check_is_prime():
     error = ''
     result = ''
@@ -41,7 +41,7 @@ def check_is_prime():
 
 
 @app.route('/factorize/', methods=['POST'])
-#@cross_origin()
+@cross_origin()
 def factorize():
     error = ''
     result = []
@@ -57,7 +57,7 @@ def factorize():
 
 
 @app.route('/generate_open_exp/', methods=['POST'])
-#@cross_origin()
+@cross_origin()
 def generate_open_exp():
     p, q, n, r = 0, 0, 0, 0
     error = ''
