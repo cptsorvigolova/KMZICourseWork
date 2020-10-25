@@ -10,7 +10,4 @@ def get_open_exp_candidates(r):
 
 
 def encrypt(e, n, key):
-    powed = fast_pow(key, e)
-    print(len(str(powed)))
-    result = powed % n
-    return result
+    return fast_pow(key, e) % n
