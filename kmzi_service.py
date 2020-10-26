@@ -96,8 +96,8 @@ def calculate_edr():
         error = e.__str__()
     response = jsonify(ed=str(ed),
                        edmodr=str(edmodr),
-                       er_iscoprime=str(er_iscoprime),
-                       ed_iscoprime=str(ed_iscoprime),
+                       er_iscoprime=er_iscoprime,
+                       ed_iscoprime=ed_iscoprime,
                        error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
