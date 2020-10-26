@@ -7,6 +7,8 @@ def is_prime(num):
 
 
 def factorize_int(num):
+    if num == 0 or num == 1:
+        return {num: 1}
     muls = factorint(num)
     return muls
 

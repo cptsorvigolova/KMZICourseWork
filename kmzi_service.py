@@ -1,14 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from Modules.math_module import is_prime, factorize_int, is_coprime
-from Modules.rsa_module import get_open_exp_candidates, encrypt
+from Modules.rsa_module import get_exponent_candidates, encrypt
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/sum_big_int/', methods=['POST'])
-@cross_origin()
 def sum_big_int():
     error = ''
     result = ''
@@ -25,7 +24,6 @@ def sum_big_int():
 
 
 @app.route('/check_is_prime/', methods=['POST'])
-@cross_origin()
 def check_is_prime():
     error = ''
     result = ''
@@ -41,7 +39,6 @@ def check_is_prime():
 
 
 @app.route('/factorize/', methods=['POST'])
-@cross_origin()
 def factorize():
     error = ''
     result = []
@@ -56,9 +53,8 @@ def factorize():
     return response
 
 
-@app.route('/generate_open_exp/', methods=['POST'])
-@cross_origin()
-def generate_open_exp():
+@app.route('/generate_exponents/', methods=['POST'])
+def generate_exponents():
     p, q, n, r = 0, 0, 0, 0
     error = ''
     candidates = []
@@ -72,7 +68,7 @@ def generate_open_exp():
             raise Exception('q is not prime')
         n = p * q
         r = (p - 1) * (q - 1)
-        candidates = get_open_exp_candidates(r)
+        candidates = get_exponent_candidates(r)
     except Exception as e:
         error = e.__str__()
     response = jsonify(n=str(n), r=str(r), candidates=candidates, error=error)
@@ -81,7 +77,6 @@ def generate_open_exp():
 
 
 @app.route('/calculate_edr/', methods=['POST'])
-@cross_origin()
 def calculate_edr():
     error = ''
     ed = ''
@@ -109,7 +104,6 @@ def calculate_edr():
 
 
 @app.route('/encrypt_session_key/', methods=['POST'])
-@cross_origin()
 def encrypt_session_key():
     error = ''
     encrypted_session_key = ''
