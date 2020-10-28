@@ -1,4 +1,4 @@
-from math import gcd
+from math import gcd, sqrt
 from sympy import isprime, factorint
 
 
@@ -9,7 +9,16 @@ def is_prime(num):
 def factorize_int(num):
     if num == 0 or num == 1:
         return {num: 1}
-    muls = factorint(num)
+    res = factorint(num)
+    muls = []
+    for i in res:
+        for el in [i] * int(res[i]):
+            muls.append(el)
+    first = int(sqrt(num))
+    while num % first != 0:
+        first -= 1
+    second = num // first
+    muls = [str(first), str(second)]
     return muls
 
 

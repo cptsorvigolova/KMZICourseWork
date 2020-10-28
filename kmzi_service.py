@@ -7,6 +7,13 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
+@app.after_request
+def apply_caching(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
+    return response
+
+
 @app.route('/sum_big_int/', methods=['POST'])
 def sum_big_int():
     error = ''
@@ -19,8 +26,6 @@ def sum_big_int():
     except Exception as e:
         error = e.__str__()
     response = jsonify(result=result, error=error)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -35,8 +40,6 @@ def check_is_prime():
     except Exception as e:
         error = e.__str__()
     response = jsonify(result=result, error=error)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -47,12 +50,12 @@ def factorize():
     try:
         json_data = request.get_json()
         num = int(json_data["num"])
+        if is_prime(num):
+            raise Exception('num is prime')
         result = factorize_int(num)
     except Exception as e:
         error = e.__str__()
     response = jsonify(result=result, error=error)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -69,14 +72,14 @@ def generate_exponents():
             raise Exception('p is not prime')
         if not is_prime(q):
             raise Exception('q is not prime')
+        if len(bin(p)) != len(bin(q)):
+            raise Exception('p and q should have same length in binary notation')
         n = p * q
         r = (p - 1) * (q - 1)
         candidates = get_exponent_candidates(r)
     except Exception as e:
         error = e.__str__()
     response = jsonify(n=str(n), r=str(r), candidates=candidates, error=error)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -103,8 +106,6 @@ def calculate_edr():
                        er_iscoprime=er_iscoprime,
                        ed_iscoprime=ed_iscoprime,
                        error=error)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -117,13 +118,13 @@ def encrypt_session_key():
         e = int(json_data["e"])
         n = int(json_data["n"])
         session_key = int(json_data["session_key"])
+        if session_key not in range(0, n):
+            raise Exception('session key should be in range 0 , ' + str(n))
         encrypted_session_key = encrypt(e, n, session_key)
     except Exception as e:
         error = e.__str__()
     response = jsonify(encrypted_session_key=str(encrypted_session_key),
                        error=error)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
