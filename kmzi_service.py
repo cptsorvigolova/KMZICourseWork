@@ -20,6 +20,7 @@ def sum_big_int():
         error = e.__str__()
     response = jsonify(result=result, error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -35,6 +36,7 @@ def check_is_prime():
         error = e.__str__()
     response = jsonify(result=result, error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -50,6 +52,7 @@ def factorize():
         error = e.__str__()
     response = jsonify(result=result, error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -73,6 +76,7 @@ def generate_exponents():
         error = e.__str__()
     response = jsonify(n=str(n), r=str(r), candidates=candidates, error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -100,6 +104,7 @@ def calculate_edr():
                        ed_iscoprime=ed_iscoprime,
                        error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
@@ -118,6 +123,7 @@ def encrypt_session_key():
     response = jsonify(encrypted_session_key=str(encrypted_session_key),
                        error=error)
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
 
