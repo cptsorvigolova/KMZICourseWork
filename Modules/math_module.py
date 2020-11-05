@@ -18,7 +18,7 @@ def factorize_int(num):
     while num % first != 0:
         first -= 1
     second = num // first
-    muls = [str(first), str(second)]
+    muls = {str(first): 1, str(second): 1}
     return muls
 
 
