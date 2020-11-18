@@ -1,7 +1,10 @@
+import binascii
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from Modules.math_module import is_prime, factorize_int, is_coprime
 from Modules.rsa_module import get_exponent_candidates, encrypt
+import Modules.kuznechik_module as kuznechik
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -14,7 +17,7 @@ def apply_caching(response):
     return response
 
 
-@app.route('/sum_big_int/', methods=['POST'])
+@app.route('/rsa/sum_big_int/', methods=['POST'])
 def sum_big_int():
     error = ''
     result = ''
@@ -29,7 +32,7 @@ def sum_big_int():
     return response
 
 
-@app.route('/check_is_prime/', methods=['POST'])
+@app.route('/rsa/check_is_prime/', methods=['POST'])
 def check_is_prime():
     error = ''
     result = ''
@@ -43,7 +46,7 @@ def check_is_prime():
     return response
 
 
-@app.route('/factorize/', methods=['POST'])
+@app.route('/rsa/factorize/', methods=['POST'])
 def factorize():
     error = ''
     result = []
@@ -59,7 +62,7 @@ def factorize():
     return response
 
 
-@app.route('/generate_exponents/', methods=['POST'])
+@app.route('/rsa/generate_exponents/', methods=['POST'])
 def generate_exponents():
     p, q, n, r = 0, 0, 0, 0
     error = ''
@@ -83,7 +86,7 @@ def generate_exponents():
     return response
 
 
-@app.route('/calculate_edr/', methods=['POST'])
+@app.route('/rsa/calculate_edr/', methods=['POST'])
 def calculate_edr():
     error = ''
     ed = ''
@@ -109,7 +112,7 @@ def calculate_edr():
     return response
 
 
-@app.route('/encrypt_session_key/', methods=['POST'])
+@app.route('/rsa/encrypt_session_key/', methods=['POST'])
 def encrypt_session_key():
     error = ''
     encrypted_session_key = ''
@@ -124,6 +127,131 @@ def encrypt_session_key():
     except Exception as e:
         error = e.__str__()
     response = jsonify(encrypted_session_key=str(encrypted_session_key),
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/expand_text/', methods=['POST'])
+def expand_text():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        text = str(json_data["text"])
+        result = kuznechik.expand(text)
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/unexpand_text/', methods=['POST'])
+def unexpand_text():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        text = str(json_data["text"])
+        result = kuznechik.unexpand(text)
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/split_text/', methods=['POST'])
+def split_text():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        text = str(json_data["text"])
+        result = ', '.join(kuznechik.split(text))
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/generate_round_keys/', methods=['POST'])
+def generate_round_keys():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        master_key = bytes(json_data["master_key"], 'utf-8')
+        keys = [binascii.hexlify(key).decode('utf-8') for key in kuznechik.get_round_keys(master_key)]
+        result = ', '.join(keys)
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(round_keys=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/encrypt_block/', methods=['POST'])
+def encrypt_block():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        master_key = bytes(json_data["master_key"], 'utf-8')
+        block = bytes(json_data["block"], 'utf-8')
+        result = binascii.hexlify(kuznechik.encrypt_block(block, master_key)).decode('utf-8')
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/decrypt_block/', methods=['POST'])
+def decrypt_block():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        master_key = bytes(json_data["master_key"], 'utf-8')
+        block = binascii.unhexlify(str(json_data["block"]))
+        result = kuznechik.decrypt_block(bytes(block), master_key).decode('utf-8')
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/encrypt_text/', methods=['POST'])
+def encrypt_text():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        master_key = bytes(json_data["master_key"], 'utf-8')
+        text = str(json_data["text"])
+        result = binascii.hexlify(kuznechik.encrypt_text(text, master_key)).decode('utf-8')
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
+                       error=error)
+    return response
+
+
+@app.route('/kuznechik/decrypt_text/', methods=['POST'])
+def decrypt_text():
+    error = ''
+    result = ''
+    try:
+        json_data = request.get_json()
+        master_key = bytes(json_data["master_key"], 'utf-8')
+        text = binascii.unhexlify(str(json_data["text"]))
+        result = kuznechik.decrypt_text(text, master_key)
+    except Exception as e:
+        error = e.__str__()
+    response = jsonify(result=result,
                        error=error)
     return response
 
