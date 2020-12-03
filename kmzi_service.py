@@ -54,7 +54,7 @@ def factorize():
         json_data = request.get_json()
         num = int(json_data["num"])
         if is_prime(num):
-            raise Exception('num is prime')
+            raise Exception('Число простое.')
         result = factorize_int(num)
     except Exception as e:
         error = e.__str__()
@@ -72,11 +72,11 @@ def generate_exponents():
         p = int(json_data["p"])
         q = int(json_data["q"])
         if not is_prime(p):
-            raise Exception('p is not prime')
+            raise Exception('p не простое.')
         if not is_prime(q):
-            raise Exception('q is not prime')
+            raise Exception('q не простое.')
         if len(bin(p)) != len(bin(q)):
-            raise Exception('p and q should have same length in binary notation')
+            raise Exception('p и q должны быть одинаковой разрядности в двоичном виде.')
         n = p * q
         r = (p - 1) * (q - 1)
         candidates = get_exponent_candidates(r)
@@ -122,7 +122,7 @@ def encrypt_session_key():
         n = int(json_data["n"])
         session_key = int(json_data["session_key"])
         if session_key not in range(0, n):
-            raise Exception('session key should be in range 0 , ' + str(n))
+            raise Exception('Сессионный ключ должен быть в диапазоне от 0 до ' + str(n))
         encrypted_session_key = encrypt(e, n, session_key)
     except Exception as e:
         error = e.__str__()

@@ -5,7 +5,7 @@ glob_key = binascii.unhexlify(MASTER_KEY)
 
 BLOCK_SIZE = 16
 
-BLOCK_SIZE_ERROR = "Invalid size of block"
+BLOCK_SIZE_ERROR = "Некорректный размер блока."
 
 PI = [
     0xfc, 0xee, 0xdd, 0x11, 0xcf, 0x6e, 0x31, 0x16, 0xfb, 0xc4, 0xfa, 0xda, 0x23, 0xc5, 0x04, 0x4d,
@@ -137,7 +137,7 @@ def get_next_keys(k1, k2, const_list):
 
 
 def get_round_keys(master_key):
-    assert len(master_key) == BLOCK_SIZE * 2, "Invalid length of master key"
+    assert len(master_key) == BLOCK_SIZE * 2, "Некорректная длина мастер-ключа."
     key_consts = []
     for i in range(32):
         num = b'\x00' * (BLOCK_SIZE - 1) + bytes([i + 1])
@@ -151,7 +151,7 @@ def get_round_keys(master_key):
         k1, k2 = get_next_keys(k1, k2, key_consts[8 * i: 8 * (i + 1)])
         round_keys.append(k1)
         round_keys.append(k2)
-    assert len(round_keys) == 10, "Unable to generate 10 round keys"
+    assert len(round_keys) == 10, "Невозможно сгенерировать 10 раундовых ключей."
     return round_keys
 
 
@@ -190,7 +190,7 @@ def unexpand(src):
 
 
 def split(text):
-    assert len(text) % 16 == 0, 'Bad input'
+    assert len(text) % 16 == 0, 'Некорректный ввод.'
     result = []
     for i in range((len(text) // 16)):
         start = i * 16
