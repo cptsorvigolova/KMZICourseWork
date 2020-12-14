@@ -209,5 +209,6 @@ def encrypt_text(text, key):
 
 def decrypt_text(src, key):
     decrypted = [decrypt_block(block, key) for block in split(src)]
+    print(decrypted)
     result = unexpand(''.join([i.decode('utf-8') for i in decrypted]))
     return result

@@ -13,6 +13,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 @app.after_request
 def apply_caching(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "*")
     response.headers.add("Access-Control-Max-Age", "86400")
     return response
 
